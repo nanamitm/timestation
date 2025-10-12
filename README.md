@@ -29,7 +29,7 @@ radio-controlled (&ldquo;atomic&rdquo;) clocks and watches.
 
 Real time signal broadcasts are limited in geographic range and notoriously
 prone to interference in urban areas, so many such clocks end up never actually
-using their self-setting functionality. **Time Signal Emulator** may allow
+using their self-setting functionality. **Time Station Emulator** may allow
 setting such clocks when/where a suitable signal is not otherwise available.
 
 ## Features
