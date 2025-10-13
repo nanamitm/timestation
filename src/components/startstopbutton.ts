@@ -1,6 +1,7 @@
 import { html } from "lit";
-import { customElement, query, state } from "lit/decorators.js";
+import { customElement, state } from "lit/decorators.js";
 import { classMap } from "lit/directives/class-map.js";
+import { createRef, ref } from "lit/directives/ref.js";
 
 import AppSettings, {
   Station,
@@ -56,22 +57,37 @@ export class StartStopButton extends BaseElement {
     }
   }
 
-  @query("start-stop-button dialog", true)
-  private accessor dialog!: HTMLDialogElement;
+  #warningDialogRef = createRef<HTMLDialogElement>();
 
-  @query("start-stop-button dialog input", true)
-  private accessor checkbox!: HTMLInputElement;
+  #warningCheckboxRef = createRef<HTMLInputElement>();
 
-  showModal() {
-    this.dialog.showModal();
+  #advisoryDialogRef = createRef<HTMLDialogElement>();
+
+  #advisoryCheckboxRef = createRef<HTMLInputElement>();
+
+  #showWarningModal() {
+    this.#warningDialogRef.value?.showModal();
   }
 
-  #closeModal() {
-    AppSettings.set("nanny", this.checkbox.checked);
+  #closeWarningModal() {
+    const checkbox = this.#warningCheckboxRef.value;
+    if (checkbox != null) AppSettings.set("nanny", checkbox.checked);
+  }
+
+  #showAdvisoryModal() {
+    this.#advisoryDialogRef.value?.showModal();
+  }
+
+  #closeAdvisoryModal() {
+    const checkbox = this.#advisoryCheckboxRef.value;
+    if (checkbox != null) AppSettings.set("advisory", checkbox.checked);
   }
 
   #start() {
-    if (AppSettings.get("nanny")) this.showModal();
+    const isAudible = AppSettings.get("audible");
+
+    if (isAudible && AppSettings.get("advisory")) this.#showAdvisoryModal();
+    else if (!isAudible && AppSettings.get("nanny")) this.#showWarningModal();
 
     RadioTimeSignal.start({
       stationIndex: knownStations.indexOf(AppSettings.get("station")),
@@ -139,7 +155,11 @@ export class StartStopButton extends BaseElement {
         ${buttonText}
       </button>
 
-      <dialog class="modal" @close=${this.#closeModal}>
+      <dialog
+        ${ref(this.#warningDialogRef)}
+        class="modal"
+        @close=${this.#closeWarningModal}
+      >
         <div
           class="modal-box flex max-h-[calc(100dvh-2rem)] w-[90%] max-w-[calc(100dvw-2rem)] flex-col gap-4"
         >
@@ -184,10 +204,71 @@ export class StartStopButton extends BaseElement {
           <span class="flex">
             <span class="grow font-semibold">Show this warning next time</span>
             <input
+              ${ref(this.#warningCheckboxRef)}
               class="checkbox"
               type="checkbox"
               name="nanny"
               .checked=${AppSettings.get("nanny")}
+            />
+          </span>
+        </div>
+      </dialog>
+
+      <dialog
+        ${ref(this.#advisoryDialogRef)}
+        class="modal"
+        @close=${this.#closeAdvisoryModal}
+      >
+        <div
+          class="modal-box flex max-h-[calc(100dvh-2rem)] w-[90%] max-w-[calc(100dvw-2rem)] flex-col gap-4"
+        >
+          <form class="flex items-center" method="dialog">
+            <h3 class="grow text-xl font-bold sm:text-2xl">Notice</h3>
+
+            <!-- Invisible dummy button takes autofocus when modal is opened -->
+            <button></button>
+
+            <button class="btn btn-circle btn-ghost btn-sm p-0">
+              <span class="size-6 sm:size-8">${svgIcons.close}</span>
+            </button>
+          </form>
+
+          <div class="alert grid-flow-col items-start text-start" role="alert">
+            <span class="size-6 sm:size-8">${svgIcons.info}</span>
+            <span class="flex min-w-0 flex-col gap-2">
+              <p>
+                <span class="font-bold">
+                  Emulated time signal is audible.
+                </span>
+              </p>
+              <p>
+                The sound you hear is the emulated radio time signal that
+                <span class="font-semibold">Time Station Emulator</span>
+                would normally transmit, pitch-shifted down to be easily
+                audible.
+              </p>
+              <p>
+                It may be mildly entertaining, but it will not set any clocks.
+              </p>
+              <p>
+                Turn the <span class="font-semibold">Audible</span> setting off
+                in
+                <span class="font-semibold">Settings &rsaquo; Advanced</span> if
+                you want
+                <span class="font-semibold">Time Station Emulator</span> to be
+                able to set clocks again.
+              </p>
+            </span>
+          </div>
+
+          <span class="flex">
+            <span class="grow font-semibold">Show this notice next time</span>
+            <input
+              ${ref(this.#advisoryCheckboxRef)}
+              class="checkbox"
+              type="checkbox"
+              name="advisory"
+              .checked=${AppSettings.get("advisory")}
             />
           </span>
         </div>

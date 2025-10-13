@@ -29,6 +29,7 @@ const testSettingValues: TestSettingValues[] = [
   ["sync", [true, false], ["aaaaa", 1, undefined]],
   ["dark", [true, false], ["", -1, "undefined"]],
   ["nanny", [true, false], ["fff", Infinity, BigInt(0)]],
+  ["advisory", [true, false], ["...", -0.1, "Infinity"]],
 ] as const;
 
 const localStoragePrototype = Object.getPrototypeOf(window.localStorage);

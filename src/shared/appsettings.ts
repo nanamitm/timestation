@@ -21,6 +21,7 @@ const kAppSettings = [
   "sync",
   "dark",
   "nanny",
+  "advisory",
 ] as const;
 export type AppSetting = (typeof kAppSettings)[number];
 export const knownAppSettings: readonly AppSetting[] = [
@@ -38,6 +39,7 @@ const kValidators: Record<AppSetting, (x: any) => boolean> = {
   sync: (x: any) => typeof x === "boolean",
   dark: (x: any) => typeof x === "boolean",
   nanny: (x: any) => typeof x === "boolean",
+  advisory: (x: any) => typeof x === "boolean",
 } as const;
 
 export type AppSettingType = {
@@ -51,6 +53,7 @@ export type AppSettingType = {
   sync: boolean;
   dark: boolean;
   nanny: boolean;
+  advisory: boolean;
 };
 
 export const defaultAppSettings: AppSettingType = {
@@ -64,6 +67,7 @@ export const defaultAppSettings: AppSettingType = {
   sync: true,
   dark: window.matchMedia?.("(prefers-color-scheme: dark").matches ?? false,
   nanny: true,
+  advisory: true,
 } as const;
 
 function convertStoredValue<T extends AppSetting>(
@@ -75,7 +79,9 @@ function convertStoredValue<T extends AppSetting>(
     if (setting === "station" || setting === "locale") {
       converted = value;
     } else if (
-      ["audible", "noclip", "sync", "dark", "nanny"].includes(setting) &&
+      ["audible", "noclip", "sync", "dark", "nanny", "advisory"].includes(
+        setting,
+      ) &&
       (value === "true" || value === "false")
     ) {
       converted = value === "true";

@@ -23,7 +23,8 @@ const FakeRadioTimeSignal = {
 describe("Start-stop button", () => {
   let startStopButton: StartStopButton;
   let innerButton: HTMLButtonElement;
-  let innerDialog: HTMLDialogElement;
+  let innerWarningDialog: HTMLDialogElement;
+  let innerAdvisoryDialog: HTMLDialogElement;
 
   beforeEach(async () => {
     startStopButton = document.createElement("start-stop-button");
@@ -31,7 +32,8 @@ describe("Start-stop button", () => {
     document.body.appendChild(startStopButton);
     await delay();
     innerButton = startStopButton.querySelector("button.btn")!;
-    innerDialog = startStopButton.querySelector("dialog")!;
+    [innerWarningDialog, innerAdvisoryDialog] =
+      startStopButton.querySelectorAll("dialog")!;
   });
 
   afterEach(() => {
@@ -164,18 +166,19 @@ describe("Start-stop button", () => {
 
   describe("can show a safety warning", () => {
     it("shows warning by default", () => {
-      const spy = vi.spyOn(innerDialog, "showModal");
-      FakeAppSettings.get.mockReturnValueOnce(true); /* App default is true. */
+      const spy = vi.spyOn(innerWarningDialog, "showModal");
+      FakeAppSettings.get.mockReturnValueOnce(false); /* audible == false */
+      FakeAppSettings.get.mockReturnValueOnce(true); /* nanny == true */
       innerButton.click();
       expect(spy).toHaveBeenCalledOnce();
       spy.mockRestore();
     });
 
     it("saves app setting according to checkbox", async () => {
-      const input = innerDialog.querySelector("input")!;
+      const input = innerWarningDialog.querySelector("input")!;
       const button: HTMLButtonElement =
-        innerDialog.querySelector("button.btn")!;
-      innerDialog.showModal();
+        innerWarningDialog.querySelector("button.btn")!;
+      innerWarningDialog.showModal();
       input.checked = false;
       button.click();
       await delay(100);
@@ -183,9 +186,41 @@ describe("Start-stop button", () => {
     });
 
     it("does not show warning according to app setting", () => {
-      const spy = vi.spyOn(innerDialog, "showModal");
+      const spy = vi.spyOn(innerWarningDialog, "showModal");
+      FakeAppSettings.get.mockReturnValueOnce(false); /* audible == false */
+      FakeAppSettings.get.mockReturnValueOnce(false); /* nanny == false */
       innerButton.click();
       expect(spy).not.toHaveBeenCalled();
+      spy.mockRestore();
+    });
+  });
+
+  describe("can show an advisory", () => {
+    it("does not show advisory by default", () => {
+      const spy = vi.spyOn(innerAdvisoryDialog, "showModal");
+      FakeAppSettings.get.mockReturnValueOnce(false); /* audible == false */
+      innerButton.click();
+      expect(spy).not.toHaveBeenCalled();
+      spy.mockRestore();
+    });
+
+    it("saves app setting according to checkbox", async () => {
+      const input = innerAdvisoryDialog.querySelector("input")!;
+      const button: HTMLButtonElement =
+        innerAdvisoryDialog.querySelector("button.btn")!;
+      innerAdvisoryDialog.showModal();
+      input.checked = false;
+      button.click();
+      await delay(100);
+      expect(FakeAppSettings.set).toHaveBeenCalledWith("advisory", false);
+    });
+
+    it("shows advisory according to app setting", () => {
+      const spy = vi.spyOn(innerAdvisoryDialog, "showModal");
+      FakeAppSettings.get.mockReturnValueOnce(true); /* audible == true */
+      FakeAppSettings.get.mockReturnValueOnce(true); /* advisory == true */
+      innerButton.click();
+      expect(spy).toHaveBeenCalledOnce();
       spy.mockRestore();
     });
   });
