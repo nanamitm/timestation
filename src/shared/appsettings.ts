@@ -16,6 +16,7 @@ const kAppSettings = [
   "jjyKhz",
   "offset",
   "dut1",
+  "audible",
   "noclip",
   "sync",
   "dark",
@@ -32,6 +33,7 @@ const kValidators: Record<AppSetting, (x: any) => boolean> = {
   jjyKhz: (x: any) => knownJjyKhz.includes(x),
   offset: (x: any) => Number.isSafeInteger(x) && x > -86400000 && x < 86400000,
   dut1: (x: any) => Number.isSafeInteger(x) && x > -1000 && x < 1000,
+  audible: (x: any) => typeof x === "boolean",
   noclip: (x: any) => typeof x === "boolean",
   sync: (x: any) => typeof x === "boolean",
   dark: (x: any) => typeof x === "boolean",
@@ -44,6 +46,7 @@ export type AppSettingType = {
   jjyKhz: JjyKhz;
   offset: number;
   dut1: number;
+  audible: boolean;
   noclip: boolean;
   sync: boolean;
   dark: boolean;
@@ -56,6 +59,7 @@ export const defaultAppSettings: AppSettingType = {
   jjyKhz: 40,
   offset: 0,
   dut1: 0,
+  audible: false,
   noclip: true,
   sync: true,
   dark: window.matchMedia?.("(prefers-color-scheme: dark").matches ?? false,
@@ -71,7 +75,7 @@ function convertStoredValue<T extends AppSetting>(
     if (setting === "station" || setting === "locale") {
       converted = value;
     } else if (
-      ["noclip", "sync", "dark", "nanny"].includes(setting) &&
+      ["audible", "noclip", "sync", "dark", "nanny"].includes(setting) &&
       (value === "true" || value === "false")
     ) {
       converted = value === "true";

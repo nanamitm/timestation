@@ -44,6 +44,7 @@ typedef struct tsig_params_t {
   uint8_t station; /** Time station. */
   uint8_t jjy_khz; /** JJY frequency. */
   int16_t dut1;    /** DUT1 value in milliseconds. */
+  uint8_t audible; /** Whether to make generated waveform audible. */
   uint8_t noclip;  /** Whether to interpolate gain changes. */
 } tsig_params_t;
 

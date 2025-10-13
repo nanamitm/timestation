@@ -14,6 +14,9 @@ import { AdvancedSettingsGroup } from "@shared/groups";
 @customElement("advanced-settings")
 export class AdvancedSettings extends BaseElement {
   @property({ type: Boolean, reflect: true })
+  accessor audible = false;
+
+  @property({ type: Boolean, reflect: true })
   accessor noclip = true;
 
   @property({ type: Boolean, reflect: true })
@@ -34,14 +37,20 @@ export class AdvancedSettings extends BaseElement {
   }
 
   #getSettings() {
+    this.audible = AppSettings.get("audible");
     this.noclip = AppSettings.get("noclip");
     this.sync = AppSettings.get("sync");
   }
 
   #saveSettings() {
+    AppSettings.set("audible", this.audible);
     AppSettings.set("noclip", this.noclip);
     AppSettings.set("sync", this.sync);
   }
+
+  #changeAudible = () => {
+    this.audible = !this.audible;
+  };
 
   #changeNoclip = () => {
     this.noclip = !this.noclip;
@@ -67,6 +76,31 @@ export class AdvancedSettings extends BaseElement {
           .group=${AdvancedSettingsGroup}
           .content=${html`
             <div class="ml-2 mt-4 flex flex-col gap-4">
+              <div class="flex h-12 items-center">
+                <h4 class="font-semibold sm:text-lg">Audible</h4>
+
+                <info-dropdown
+                  class="grow"
+                  classes="max-w-[13rem] min-[380px]:max-w-[17rem]"
+                  .content=${html`
+                    <h4 class="font-bold">Audible</h4>
+                    <span class="text-sm">
+                      Makes emulated time signal audible. Also prevents it from
+                      setting clocks!
+                    </span>
+                  `}
+                  grow
+                ></info-dropdown>
+
+                <input
+                  class="checkbox mr-2"
+                  type="checkbox"
+                  name="audible"
+                  @change=${this.#changeAudible}
+                  .checked=${this.audible}
+                />
+              </div>
+
               <div class="flex h-12 items-center">
                 <h4 class="font-semibold sm:text-lg">Smoothing</h4>
 

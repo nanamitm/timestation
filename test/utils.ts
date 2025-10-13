@@ -12,6 +12,7 @@ export const TestSettings = {
   jjyKhz: 60,
   offset: -1234,
   dut1: 123,
+  audible: false,
   noclip: false,
   sync: false,
   dark: false,

@@ -9,6 +9,7 @@
 #define TSIG_WAVEFORM_LERP_RATE             0.015F
 #define TSIG_WAVEFORM_LERP_MIN_DELTA        0.005F
 #define TSIG_WAVEFORM_SYNC_MARKER           0xff
+#define TSIG_WAVEFORM_AUDIBLE_FREQ          1000
 #define TSIG_WAVEFORM_SUBHARMONIC_THRESHOLD 20000
 #define TSIG_WAVEFORM_SUBHARMONIC_THIRD     3
 #define TSIG_WAVEFORM_SUBHARMONIC_FIFTH     5
@@ -810,6 +811,7 @@ void tsig_waveform_init(tsig_waveform_ctx_t *ctx, tsig_params_t *params) {
   ctx->fade_gain = 0;
   ctx->gain = 0.0;
 
-  ctx->freq = target_hz / subharmonic;
+  ctx->freq =
+      params->audible ? TSIG_WAVEFORM_AUDIBLE_FREQ : target_hz / subharmonic;
   ctx->scale = sample_rate / subharmonic;
 }

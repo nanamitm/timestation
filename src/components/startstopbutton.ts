@@ -78,6 +78,7 @@ export class StartStopButton extends BaseElement {
       jjyKhzIndex: knownJjyKhz.indexOf(AppSettings.get("jjyKhz")),
       offset: AppSettings.get("offset") + this.#serverOffset,
       dut1: AppSettings.get("dut1"),
+      audible: AppSettings.get("audible"),
       noclip: AppSettings.get("noclip"),
     });
   }

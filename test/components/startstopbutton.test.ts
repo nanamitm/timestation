@@ -145,12 +145,13 @@ describe("Start-stop button", () => {
     });
 
     it("passes params to waveform generator", () => {
-      const { stationIndex, jjyKhzIndex, offset, dut1, noclip } =
+      const { stationIndex, jjyKhzIndex, offset, dut1, audible, noclip } =
         FakeRadioTimeSignal.start.mock.lastCall![0];
       expect(stationIndex).toBe(2);
       expect(jjyKhzIndex).toBe(1);
       expect(offset).toBe(-1234);
       expect(dut1).toBe(123);
+      expect(audible).toBe(false);
       expect(noclip).toBe(false);
     });
 
