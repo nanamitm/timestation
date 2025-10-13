@@ -99,7 +99,7 @@ export class AdvancedSettings extends BaseElement {
                   classes="max-w-[11rem] min-[420px]:max-w-[20rem]"
                   .content=${html`
                     <h4 class="font-bold">Sync time</h4>
-                    <span class="float-left text-sm">
+                    <span class="text-sm">
                       Sync time with server on next page reload.
                     </span>
                   `}

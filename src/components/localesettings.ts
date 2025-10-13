@@ -68,7 +68,7 @@ export class LocaleSettings extends BaseElement {
             classes="max-w-[14rem] min-[440px]:max-w-max"
             .content=${html`
               <h4 class="font-bold">Locale</h4>
-              <span class="float-left text-sm">
+              <span class="text-sm">
                 Changes only how transmitted time is displayed.
               </span>
             `}
