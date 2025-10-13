@@ -68,13 +68,13 @@ export class AdvancedSettings extends BaseElement {
           .content=${html`
             <div class="ml-2 mt-4 flex flex-col gap-4">
               <div class="flex h-12 items-center">
-                <h4 class="font-semibold sm:text-lg">Noclip</h4>
+                <h4 class="font-semibold sm:text-lg">Smoothing</h4>
 
                 <info-dropdown
                   class="grow"
-                  classes="max-w-[12rem] min-[420px]:max-w-[21rem]"
+                  classes="max-w-[12rem] min-[460px]:max-w-[21rem]"
                   .content=${html`
-                    <h4 class="font-bold">Noclip</h4>
+                    <h4 class="font-bold">Smoothing</h4>
                     <span class="text-sm">
                       Prevents clipping, but may be less compatible.
                     </span>
