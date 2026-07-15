@@ -20,6 +20,9 @@ export class AdvancedSettings extends BaseElement {
   accessor noclip = true;
 
   @property({ type: Boolean, reflect: true })
+  accessor square = false;
+
+  @property({ type: Boolean, reflect: true })
   accessor sync = true;
 
   @query("advanced-settings arrow-dropdown", true)
@@ -39,12 +42,14 @@ export class AdvancedSettings extends BaseElement {
   #getSettings() {
     this.audible = AppSettings.get("audible");
     this.noclip = AppSettings.get("noclip");
+    this.square = AppSettings.get("square");
     this.sync = AppSettings.get("sync");
   }
 
   #saveSettings() {
     AppSettings.set("audible", this.audible);
     AppSettings.set("noclip", this.noclip);
+    AppSettings.set("square", this.square);
     AppSettings.set("sync", this.sync);
   }
 
@@ -54,6 +59,10 @@ export class AdvancedSettings extends BaseElement {
 
   #changeNoclip = () => {
     this.noclip = !this.noclip;
+  };
+
+  #changeSquare = () => {
+    this.square = !this.square;
   };
 
   #changeSync = () => {
@@ -122,6 +131,31 @@ export class AdvancedSettings extends BaseElement {
                   name="noclip"
                   @change=${this.#changeNoclip}
                   .checked=${this.noclip}
+                />
+              </div>
+
+              <div class="flex h-12 items-center">
+                <h4 class="font-semibold sm:text-lg">Square wave</h4>
+
+                <info-dropdown
+                  class="grow"
+                  classes="max-w-[14rem] min-[420px]:max-w-[22rem]"
+                  .content=${html`
+                    <h4 class="font-bold">Square wave</h4>
+                    <span class="text-sm">
+                      Uses a square-wave carrier. Its harmonics may improve
+                      compatibility with some radio-controlled clocks.
+                    </span>
+                  `}
+                  grow
+                ></info-dropdown>
+
+                <input
+                  class="checkbox mr-2"
+                  type="checkbox"
+                  name="square"
+                  @change=${this.#changeSquare}
+                  .checked=${this.square}
                 />
               </div>
 

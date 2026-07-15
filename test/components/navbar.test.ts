@@ -47,6 +47,7 @@ describe("Nav bar", () => {
 
   it("renders with defaults", () => {
     expect(dropdown.hasAttribute("open")).toBe(false);
+    expect(gitHubLink.href).toBe("https://github.com/nanamitm/timestation");
     expect(getStyle(settingsLink, "pointer-events")).toBe("none");
     expect(aboutDialog.hasAttribute("open")).toBe(false);
     expect(settingsDialog.hasAttribute("open")).toBe(false);

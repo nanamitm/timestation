@@ -10,7 +10,7 @@ EMCC_PARAMS=(
   '-sSTACK_SIZE=32768'
   '-sAUDIO_WORKLET'
   '-sWASM_WORKERS'
-  '-sMALLOC=none'
+  '-sMALLOC=emmalloc'
   '-sEXPORT_ES6'
   '-O3'
 )
@@ -21,7 +21,10 @@ for param in "$@"; do
 done
 
 emcc timesignal.c -o timesignal.js "${EMCC_PARAMS[@]}" &&
-  sed -i 's|timesignal.aw.js|wasm/timesignal.aw.js|' timesignal.js &&
+  sed -i \
+    -e 's|timesignal.aw.js|wasm/timesignal.aw.js|' \
+    -e 's|if(Module\["locateFile"\]){wasmBinaryFile="timesignal.wasm";if(!isDataURI(wasmBinaryFile)){wasmBinaryFile=locateFile(wasmBinaryFile)}}else{wasmBinaryFile=new URL("timesignal.wasm",import.meta.url).href}|wasmBinaryFile="timesignal.wasm";if(!isDataURI(wasmBinaryFile)){wasmBinaryFile=locateFile(wasmBinaryFile)}|' \
+    timesignal.js &&
   mkdir -p ../../wasm &&
   cp timesignal.aw.js timesignal.js timesignal.wasm ../../wasm &&
   rm -f timesignal.aw.js timesignal.js timesignal.wasm timesignal.ww.js

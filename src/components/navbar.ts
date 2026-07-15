@@ -121,7 +121,7 @@ export class NavBar extends BaseElement {
               <li>
                 <a
                   class="px-2"
-                  href="https://github.com/kangtastic/timestation"
+                  href="https://github.com/nanamitm/timestation"
                   target="_blank"
                   @click=${this.#clickGitHub}
                 >

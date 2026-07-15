@@ -14,9 +14,11 @@ export const TestSettings = {
   dut1: 123,
   audible: false,
   noclip: false,
+  square: false,
   sync: false,
   dark: false,
   nanny: false,
+  advisory: false,
 } as const;
 
 export const FakeAppSettings = {

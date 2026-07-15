@@ -18,13 +18,15 @@ describe("Advanced settings", () => {
   let collapseSetting: CollapseSetting;
   let audible: HTMLInputElement;
   let noclip: HTMLInputElement;
+  let square: HTMLInputElement;
   let sync: HTMLInputElement;
 
   beforeEach(async () => {
     advancedSettings = document.createElement("advanced-settings");
     document.body.appendChild(advancedSettings);
     await delay();
-    [audible, noclip, sync] = advancedSettings.querySelectorAll("input");
+    [audible, noclip, square, sync] =
+      advancedSettings.querySelectorAll("input");
     arrowDropdown = advancedSettings.querySelector("arrow-dropdown")!;
     summary = advancedSettings.querySelector("summary.dropdown-arrow")!;
     collapseSetting = advancedSettings.querySelector("collapse-setting")!;
@@ -38,11 +40,13 @@ describe("Advanced settings", () => {
   it("renders closed with defaults", () => {
     expect(advancedSettings.audible).toBe(false);
     expect(advancedSettings.noclip).toBe(true);
+    expect(advancedSettings.square).toBe(false);
     expect(advancedSettings.sync).toBe(true);
     expect(arrowDropdown.open).toBe(false);
     expect(collapseSetting.open).toBe(false);
     expect(audible.checked).toBe(false);
     expect(noclip.checked).toBe(true);
+    expect(square.checked).toBe(false);
     expect(sync.checked).toBe(true);
   });
 
@@ -50,13 +54,16 @@ describe("Advanced settings", () => {
     it("gets settings upon true", () => {
       advancedSettings.audible = false;
       advancedSettings.noclip = true;
+      advancedSettings.square = false;
       advancedSettings.sync = false;
       FakeAppSettings.get.mockReturnValueOnce(true);
       FakeAppSettings.get.mockReturnValueOnce(false);
       FakeAppSettings.get.mockReturnValueOnce(true);
+      FakeAppSettings.get.mockReturnValueOnce(false);
       EventBus.publish(ReadyBusyEvent, true);
       expect(advancedSettings.audible).toBe(true);
       expect(advancedSettings.noclip).toBe(false);
+      expect(advancedSettings.square).toBe(true);
       expect(advancedSettings.sync).toBe(true);
     });
 
@@ -70,10 +77,12 @@ describe("Advanced settings", () => {
     it("sets settings upon save", () => {
       advancedSettings.audible = true;
       advancedSettings.noclip = false;
+      advancedSettings.square = true;
       advancedSettings.sync = true;
       EventBus.publish(SettingsEvent, "save");
       expect(FakeAppSettings.set).toHaveBeenCalledWith("audible", true);
       expect(FakeAppSettings.set).toHaveBeenCalledWith("noclip", false);
+      expect(FakeAppSettings.set).toHaveBeenCalledWith("square", true);
       expect(FakeAppSettings.set).toHaveBeenCalledWith("sync", true);
     });
 
@@ -102,40 +111,46 @@ describe("Advanced settings", () => {
   });
 
   describe("reacts to property/attribute/checkbox changes", () => {
-    describe.each([["audible"], ["noclip"], ["sync"]])("%s", (name) => {
-      it("reflects property", async () => {
-        const checkbox =
-          name === "audible" ? audible
-          : name === "noclip" ? noclip
-          : sync;
-        (advancedSettings as any)[name] = false;
-        await delay();
-        expect(advancedSettings.hasAttribute(name)).toBe(false);
-        expect(checkbox.checked).toBe(false);
-      });
+    describe.each([["audible"], ["noclip"], ["square"], ["sync"]])(
+      "%s",
+      (name) => {
+        it("reflects property", async () => {
+          const checkbox =
+            name === "audible" ? audible
+            : name === "noclip" ? noclip
+            : name === "square" ? square
+            : sync;
+          (advancedSettings as any)[name] = false;
+          await delay();
+          expect(advancedSettings.hasAttribute(name)).toBe(false);
+          expect(checkbox.checked).toBe(false);
+        });
 
-      it("reflects attribute", async () => {
-        const checkbox =
-          name === "audible" ? audible
-          : name === "noclip" ? noclip
-          : sync;
-        advancedSettings.removeAttribute(name);
-        await delay();
-        expect((advancedSettings as any)[name]).toBe(false);
-        expect(checkbox.checked).toBe(false);
-      });
+        it("reflects attribute", async () => {
+          const checkbox =
+            name === "audible" ? audible
+            : name === "noclip" ? noclip
+            : name === "square" ? square
+            : sync;
+          advancedSettings.removeAttribute(name);
+          await delay();
+          expect((advancedSettings as any)[name]).toBe(false);
+          expect(checkbox.checked).toBe(false);
+        });
 
-      it("reflects checkbox state", async () => {
-        const checkbox =
-          name === "audible" ? audible
-          : name === "noclip" ? noclip
-          : sync;
-        const state = name === "audible";
-        checkbox.click();
-        await delay();
-        expect(advancedSettings.hasAttribute(name)).toBe(state);
-        expect((advancedSettings as any)[name]).toBe(state);
-      });
-    });
+        it("reflects checkbox state", async () => {
+          const checkbox =
+            name === "audible" ? audible
+            : name === "noclip" ? noclip
+            : name === "square" ? square
+            : sync;
+          const state = name === "audible" || name === "square";
+          checkbox.click();
+          await delay();
+          expect(advancedSettings.hasAttribute(name)).toBe(state);
+          expect((advancedSettings as any)[name]).toBe(state);
+        });
+      },
+    );
   });
 });

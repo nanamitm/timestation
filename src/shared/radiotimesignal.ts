@@ -32,6 +32,7 @@ interface TimeSignalModule extends EmscriptenModule {
     dut1: number,
     audible: boolean,
     noclip: boolean,
+    square: boolean,
   ): void;
 
   _tsig_stop(): void;
@@ -46,6 +47,7 @@ type TimeSignalModuleParams = {
   dut1: number;
   audible: boolean;
   noclip: boolean;
+  square: boolean;
 };
 
 const kTimeSignalState = [
@@ -229,7 +231,7 @@ class RadioTimeSignal {
   #sendParams = () => {
     if (this.#params == null) return;
 
-    const { dut1, jjyKhzIndex, audible, noclip, offset, stationIndex } =
+    const { dut1, jjyKhzIndex, audible, noclip, offset, square, stationIndex } =
       this.#params;
     const outputLatencyMs = 1000 * this.audioContext.outputLatency;
 
@@ -240,6 +242,7 @@ class RadioTimeSignal {
       dut1,
       audible,
       noclip,
+      square,
     );
 
     if (import.meta.env.DEV)

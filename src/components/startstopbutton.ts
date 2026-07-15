@@ -109,6 +109,7 @@ export class StartStopButton extends BaseElement {
       dut1: AppSettings.get("dut1"),
       audible: AppSettings.get("audible"),
       noclip: AppSettings.get("noclip"),
+      square: AppSettings.get("square"),
     });
   }
 

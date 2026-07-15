@@ -26,6 +26,7 @@ const testSettingValues: TestSettingValues[] = [
   ["dut1", [-999, -99, 0, 99, 999], [-1000, 1000, "abc", -Infinity]],
   ["audible", [true, false], ["!!!", 0.1, "null"]],
   ["noclip", [true, false], ["zzzz", 0, null]],
+  ["square", [true, false], ["zzzz", 0, null]],
   ["sync", [true, false], ["aaaaa", 1, undefined]],
   ["dark", [true, false], ["", -1, "undefined"]],
   ["nanny", [true, false], ["fff", Infinity, BigInt(0)]],

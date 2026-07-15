@@ -341,17 +341,19 @@ EMSCRIPTEN_KEEPALIVE void tsig_start() {
  * @param dut1 DUT1 value in milliseconds.
  * @param audible Whether to make generated waveform audible.
  * @param noclip Whether to interpolate gain changes.
+ * @param square Whether to generate a square-wave carrier.
  * @note Should be called by JS in response to being notified of a state
  *  transition to `TSIG_STATE_REQ_PARAMS`.
  */
 EMSCRIPTEN_KEEPALIVE void tsig_load_params(double offset, uint8_t station,
                                            uint8_t jjy_khz, int16_t dut1,
-                                           uint8_t audible, uint8_t noclip) {
+                                           uint8_t audible, uint8_t noclip,
+                                           uint8_t square) {
 #ifdef TSIG_DEBUG
   printf(
       "tsig_load_params(offset=%f, station=%u, jjy_khz=%u, dut1=%d, "
-      "audible=%d, noclip=%d);\n",
-      offset, station, jjy_khz, dut1, audible, noclip);
+      "audible=%d, noclip=%d, square=%d);\n",
+      offset, station, jjy_khz, dut1, audible, noclip, square);
 #endif /* TSIG_DEBUG */
 
   tsig_params.offset = offset;
@@ -360,6 +362,7 @@ EMSCRIPTEN_KEEPALIVE void tsig_load_params(double offset, uint8_t station,
   tsig_params.dut1 = dut1;
   tsig_params.audible = audible;
   tsig_params.noclip = noclip;
+  tsig_params.square = square;
 
   atomic_store(&tsig_ctx.state, TSIG_STATE_LOAD_PARAMS);
   tsig_js_cb(TSIG_STATE_LOAD_PARAMS);

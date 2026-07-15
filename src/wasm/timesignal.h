@@ -46,6 +46,7 @@ typedef struct tsig_params_t {
   int16_t dut1;    /** DUT1 value in milliseconds. */
   uint8_t audible; /** Whether to make generated waveform audible. */
   uint8_t noclip;  /** Whether to interpolate gain changes. */
+  uint8_t square;  /** Whether to generate a square-wave carrier. */
 } tsig_params_t;
 
 static inline int64_t tsig_min(int64_t a, int64_t b) {

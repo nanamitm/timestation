@@ -621,7 +621,8 @@ static void tsig_xmit_wwvb(tsig_datetime_t datetime, tsig_params_t *params,
   }
 }
 
-static inline float tsig_gen_next_sample(tsig_waveform_ctx_t *ctx) {
+static inline float tsig_gen_next_sample(tsig_waveform_ctx_t *ctx,
+                                         tsig_params_t *params) {
   /*
    * JS wants 32-bit floats, but pure floats may not work. Simulate integer
    * quantization by scaling by some integer factor, flooring, and dividing
@@ -632,6 +633,8 @@ static inline float tsig_gen_next_sample(tsig_waveform_ctx_t *ctx) {
    * cf. https://jjy.luxferre.top/
    */
   double sample = tsig_iir_next(&ctx->iir);
+  if (params->square)
+    sample = sample < 0.0 ? -1.0 : 1.0;
   int lpcm_sample = sample * ctx->gain * ctx->scale;
   return (float)lpcm_sample / ctx->scale;
 }
@@ -748,7 +751,7 @@ void tsig_waveform_generate(tsig_waveform_ctx_t *ctx, tsig_params_t *params,
     ctx->gain = params->noclip ? tsig_lerp(target_gain, gain) : target_gain;
 
     /* We are now ready to generate and output a sample. */
-    float sample = tsig_gen_next_sample(ctx);
+    float sample = tsig_gen_next_sample(ctx, params);
 
     for (int o = 0; o < n_outputs; o++)
       for (int c = 0; c < outputs[o].numberOfChannels; c++)
