@@ -67,7 +67,7 @@ issues appear to have been resolved for at least some users. Good luck!
 
 ## Usage
 
-**Time Station Emulator** is hosted at https://timestation.pages.dev/.
+**Time Station Emulator** is hosted at https://timestation-e3k.pages.dev/.
 
 <details>
   <summary>click to expand/hide</summary>
