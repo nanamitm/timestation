@@ -59,7 +59,7 @@ describe("Advanced settings", () => {
       FakeAppSettings.get.mockReturnValueOnce(true);
       FakeAppSettings.get.mockReturnValueOnce(false);
       FakeAppSettings.get.mockReturnValueOnce(true);
-      FakeAppSettings.get.mockReturnValueOnce(false);
+      FakeAppSettings.get.mockReturnValueOnce(true);
       EventBus.publish(ReadyBusyEvent, true);
       expect(advancedSettings.audible).toBe(true);
       expect(advancedSettings.noclip).toBe(false);
